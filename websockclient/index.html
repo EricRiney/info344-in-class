@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>WebSockets Demo</title>
+</head>
+<body>
+	<h1>Notifications</h1>
+	<p><button id="trigger-button">Trigger Event</button></p>
+	<div id="events">
+
+	</div>
+
+	<!--fetch() polyfill-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>	
+	<script>
+		var eventsDiv = document.querySelector("#events")
+		
+		//use `wss://` for servers that support TLS
+		var websock = new WebSocket("ws://localhost:4000/v1/ws")
+		websock.addEventListener("message", function(wsevent) {
+			var event = JSON.parse(wsevent.data);
+			var p = document.createElement("p");
+			p.textContent = event.message;
+			eventsDiv.appendChild(p);
+		})
+
+		document.querySelector("#trigger-button")
+			.addEventListener("click", function() {
+				fetchOpts = {
+					method: "POST"
+				}
+				fetch("http://localhost:4000/v1/trigger", fetchOpts)
+					.catch(function(err) {
+						alert(err.message || err);
+					});
+			})
+	</script>
+</body>
+</html>
