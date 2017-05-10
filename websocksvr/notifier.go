@@ -11,6 +11,9 @@ type Notifier struct {
 	//TODO: add other fields you might need
 	//such as another channel or a mutex
 	//(either would work)
+	//remember that go maps ARE NOT safe for
+	//concurrent access, so you must do something
+	//to protect the `clients` map
 }
 
 //NewNotifier constructs a new Notifer.
@@ -64,7 +67,12 @@ func (n *Notifier) broadcast(event interface{}) {
 	//n.clients and write the `event` parameter to the client
 	//as a JSON-encoded object.
 	//HINT: https://godoc.org/github.com/gorilla/websocket#Conn.WriteJSON
-	//If you get an error back, the client has gone away,
-	//so you should call `.Close()` on the client and delete
+	//and for even better performance, try using a PreparedMessage:
+	//https://godoc.org/github.com/gorilla/websocket#PreparedMessage
+	//https://godoc.org/github.com/gorilla/websocket#Conn.WritePreparedMessage
+
+	//If you get an error while writing to a client,
+	//the client has wandered off, so you should call
+	//the `.Close()` method on the client, and delete
 	//it from the n.clients map
 }

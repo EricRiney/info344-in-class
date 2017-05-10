@@ -34,6 +34,11 @@ func TriggerEvent(w http.ResponseWriter, r *http.Request) {
 func WebSocketUpgradeHandler(w http.ResponseWriter, r *http.Request) {
 	//TODO: upgrade this request to a web socket connection
 	//see https://godoc.org/github.com/gorilla/websocket#hdr-Overview
+	//NOTE that by default, the websocket package will reject
+	//cross-origin upgrade requests, so make sure you set the
+	//CheckOrigin field of the Upgrader to allow upgrades from
+	//any origin.
+	//See https://godoc.org/github.com/gorilla/websocket#hdr-Origin_Considerations
 
 	//after upgrading, use the `.AddClient()` to add the new
 	//connection to your notifier
@@ -45,6 +50,7 @@ func main() {
 
 	//TODO: create a NewNotifier and call
 	//its .Start() method on a new goroutine
+	// go mynotifier.Start()
 
 	//your handlers will need access to this notifer
 	//instance, so share it with them somehow
@@ -53,5 +59,7 @@ func main() {
 	http.HandleFunc("/v1/trigger", TriggerEvent)
 
 	fmt.Printf("listening at %s...\n", addr)
+	fmt.Printf("test the server by opening the websockclient/index.html page\n")
+	fmt.Printf("in a few different browser tabs\n")
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
