@@ -23,7 +23,7 @@
 		websock.addEventListener("message", function(wsevent) {
 			var event = JSON.parse(wsevent.data);
 			var p = document.createElement("p");
-			p.textContent = event.message;
+			p.textContent = event.message + ' (' + new Date(event.createdAt).toLocaleString() + ')';
 			eventsDiv.appendChild(p);
 		})
 
