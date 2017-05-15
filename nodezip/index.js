@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const zips = require('../data/zips.json');
+const zips = require('./zips.json');
 console.log('loaded %d zips', zips.length);
 
 const zipCityIndex = zips.reduce((index, record) => {
@@ -32,7 +32,7 @@ app.get('/zips/city/:cityName', (req, res) => {
     } else {
         res.json(zipsForCity);
     }
-})
+});
 
 app.get('/hello/:name', (req, res) => {
     res.send(`Hello ${req.params.name}!`);
