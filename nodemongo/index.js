@@ -31,6 +31,12 @@ mongodb.MongoClient.connect(`mongodb://${mongoAddr}/demo`)
         let handlers = require('./handlers/tasks.js');
         app.use(handlers(store));
 
+        //error handler
+        app.use((err, req, res, next) => {
+            console.error(err);
+            res.status(err.status || 500).send(err.message);
+        });
+
         app.listen(port, host, () => {
             console.log(`server is listening at http://${host}:${port}...`);
         });
