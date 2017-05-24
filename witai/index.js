@@ -30,6 +30,9 @@ function handlePreReqs(req, res, witaiData) {
 	//to determine which course the user is 
 	//asking about, and respond with a natural
 	//language message indicating the pre-reqs
+	let course = witaiData.entities.course[0].value;
+	let courseprereqs = prereqs[course];
+	res.send(`The pre-requisites for ${course} are ${courseprereqs.join(', ')}.`);
 }
 
 app.get("/chatbot", (req, res, next) => {
@@ -37,6 +40,20 @@ app.get("/chatbot", (req, res, next) => {
 	//extract meaning from the value in the
 	//`q` query string param and respond
 	//accordingly
+	let q = req.query.q;
+	console.log(`user is asking ${q}`);
+	witaiClient.message(q)
+		.then(data => {
+			console.log(JSON.stringify(data, undefined, 2));
+			switch (data.entities.intent[0].value) {
+				case "prereqs":
+					handlePreReqs(req, res, data);
+					break;					
+				default:
+					res.send("Sorry, I'm not sure how to answer that. Please try again.");
+			}
+		})
+		.catch(next);
 
 });
 
